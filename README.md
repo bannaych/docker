@@ -19,9 +19,15 @@ The main issue is when delete a container, you delete the writeable layer and an
 Depending on your application, this may or may not be required, but for most DBAs they want their data in tact. For them Data is GOLD.. 
 
 In this blog I will show you how we can use the Pure Storage Docker plugin to create
-persistent storage volume which we can then use to create MSSQL server containers on, allowing is to decouple the data from the application, this gives us the ability to delete containers, snapshot docker volumes and create instant clones of the containers for rapid agile development.
+persistent storage volume which we can then use to create MSSQL server containers on in a linux environment, allowing is to decouple the data from the application, this gives us the ability to delete containers, snapshot docker volumes and create instant clones of the containers for rapid agile development.
 
+# Environment
 
+For this demo I'm using a linux host to run my docker SQL Server containers on, you can just as easily run Docker on windows to get the same result.
+
+|Role|FQDN|IP|OS|RAM|CPU|
+|----|----|----|----|----|----|
+|Docker Virtual Machine|docker.localdomain|192.168.111.198|OEL 7|5G|5|
 
 
 
