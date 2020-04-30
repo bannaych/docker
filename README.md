@@ -25,10 +25,49 @@ persistent storage volume which we can then use to create MSSQL server container
 
 For this demo I'm using a linux host to run my docker SQL Server containers on, you can just as easily run Docker on windows to get the same result.
 
-|Role|FQDN|IP|OS|RAM|CPU|
-|----|----|----|----|----|----|
-|Docker Virtual Machine|docker.localdomain|192.168.111.198|OEL 7|5G|5|
+|Role|FQDN|IP|OS|RAM|CPU|Pure Docker plugin
+|----|----|----|----|----|----|----|
+|Docker Virtual Machine|docker.localdomain|192.168.111.198|OEL 7|5G|5|3.0
+
+**Note:** Latest version on plugin is 3.8
+
+# Installation 
+
+* Install the Plugin
+```
+# docker plugin install purestorage/docker-plugin:3.0 --alias pure
+```
+* Enter the Array Configuration in the /etc/pure-docker-plugin/pure.json file
+```
+ {
+     "FlashArrays":[
+         {
+             "MgmtEndPoint":“192.168.111.130",
+             "APIToken":" 476d58bc-3c91-0d10-1b9e-0f31058c4621"
+         }
+     ]
+ }
+```
+
+* Create the Docker volume to be used for MSSQL
+
+```
+docker volume create --driver=pure:latest --opt size=20GB --name=sqldata1 --label=sqldata1
+sqldata1
+```
+* Check the array to make sure volume has been created
 
 
+* Create the MSSQL 2019 container called sql3 using the volume we just created - **sqldata1**
+```
+# docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=P@ssw0rd" -p 1433:1433 --volume-driver pure --volume sqldata1:/var/opt/mssql --name sql3 -d mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
+729c2574a03498c3536e870e4ebcdd74731dfdd16745352e3af04e9e0d9dfd82
+```
+* Check to makre sure the docker container is created
+```
+# docker ps
+CONTAINER ID        IMAGE                                                  COMMAND                  CREATED             STATUS              PORTS                    NAMES
+729c2574a034        mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04   "/opt/mssql/bin/perm…"   20 seconds ago      Up 14 seconds       0.0.0.0:1433->1433/tcp   sql3
+```
 
 
