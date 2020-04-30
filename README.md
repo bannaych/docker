@@ -96,3 +96,10 @@ tmpfs                                          2.8G     0  2.8G   0% /sys/firmwa
 ```
 * Log into the new SQL Server container using SSMS ( SqL Server Management Studio )
 
+* Connect the database running on the Docker host **192.168.111.198** using sa authentication
+
+* Create a new database called **sqldemo**
+
+* Confirm the database is running on the new docker volume
+
+
