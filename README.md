@@ -58,6 +58,16 @@ sqldata1
 * Check the array to make sure volume has been created
 
 
+* Check to make sure the Linx OS can see the new volume
+```
+#fdisk -l
+
+Disk /dev/mapper/3624a9370a21265762db64ece0005168a: 20.0 GB, 20000000000 bytes, 39062500 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 4194304 bytes
+```
+
 * Create the MSSQL 2019 container called sql3 using the volume we just created - **sqldata1**
 ```
 # docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=P@ssw0rd" -p 1433:1433 --volume-driver pure --volume sqldata1:/var/opt/mssql --name sql3 -d mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
@@ -69,5 +79,20 @@ sqldata1
 CONTAINER ID        IMAGE                                                  COMMAND                  CREATED             STATUS              PORTS                    NAMES
 729c2574a034        mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04   "/opt/mssql/bin/perm…"   20 seconds ago      Up 14 seconds       0.0.0.0:1433->1433/tcp   sql3
 ```
-
+* Log into the container and confirm the volume has been mounted
+```
+# docker exec -it 729c2574a034 bash
+mssql@729c2574a034:/$ df -h
+Filesystem                                     Size  Used Avail Use% Mounted on
+overlay                                         66G   47G   19G  71% /
+tmpfs                                           64M     0   64M   0% /dev
+tmpfs                                          2.8G     0  2.8G   0% /sys/fs/cgroup
+shm                                             64M     0   64M   0% /dev/shm
+/dev/mapper/ol-root                             66G   47G   19G  71% /etc/hosts
+/dev/mapper/3624a9370a21265762db64ece0005168a   19G  153M   19G   1% /var/opt/mssql
+tmpfs                                          2.8G     0  2.8G   0% /proc/acpi
+tmpfs                                          2.8G     0  2.8G   0% /proc/scsi
+tmpfs                                          2.8G     0  2.8G   0% /sys/firmware
+```
+* Log into the new SQL Server container using SSMS ( SqL Server Management Studio )
 
