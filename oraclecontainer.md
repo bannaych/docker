@@ -4,9 +4,11 @@ Docker and containers have become a integral part of virtualisation, being able 
 almost instantly have transformed the way be build, develop and manage applications.
 
 In this blog I will show you how we can rapidly create Oracle 19c container clones using the Pure Storage Docker plugin
+and the new Oracle 19c container database image on the Oracle Container Registry
 
+https://container-registry.oracle.com/pls/apex/f?p=113:4:2886566670416# 
 
-# Installing the Pure Plugin
+Installing the Pure Plugin
 ```
 docker plugin install purestorage/docker-plugin:v3.10 --alias pure --grant-all-permissions
 ```
@@ -29,5 +31,13 @@ docker plugin install purestorage/docker-plugin:v3.10 --alias pure --grant-all-p
 [11:46:57][root@docker ~]# docker plugin  ls
 ID                  NAME                DESCRIPTION                      ENABLED
 a0b3cc51480d        pure:latest         Pure Storage plugin for Docker   true
+```
+
+# Login to the Oracle Container Registry
+```
+12:23:47 root@docker ~ → docker login container-registry.oracle.com
+Username (cbannayan@purestorage.com):
+Password:
+Login Succeeded
 ```
 
