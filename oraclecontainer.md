@@ -171,6 +171,18 @@ ora19clone
 pure:latest         ora19clone
 
 ```
+# Lets confirm the clone has been created from the source
+```
+pureuser@Pure-SYD-m20-1>
+pureuser@Pure-SYD-m20-1> purevol list *ora19*
+Name                      Size  Source                Created                   Serial
+docker-docker-ora19c      5G    -                     2021-02-08 12:48:50 AEDT  A21265762DB64ECE000E1FB0
+docker-docker-ora19clone  5G    docker-docker-ora19c  2021-02-08 14:16:54 AEDT  A21265762DB64ECE000E2073
+
+As you can see, the ora19clone is the same 5G in size and its source is ora19c 
+
+```
+
 # Create the clone container using the clone volume
 ```
 02:02:21 root@docker ~ → docker run -d --name zz-ora19c-clone --volume-driver pure -v ora19clone:/opt/oracle/oradata container-registry.oracle.com/database/enterprise:19.3.0.0
@@ -205,3 +217,7 @@ SQL> select count(*) from table1;
         36
 
 SQL>
+```
+The Oracle Container has started without doing a new install and the table "table1" we created is there.
+
+
