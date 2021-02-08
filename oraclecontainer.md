@@ -223,3 +223,4 @@ SQL>
 The Oracle Container has started without doing a new install and the table "table1" we created is there.
 
 
+In this blog we have seen how using the Pure Storage Docker Plugin can easily and quickly deploy and clone Oracle 19c database containers using persistent storage. 
