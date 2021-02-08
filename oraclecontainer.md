@@ -4,7 +4,7 @@ Docker and containers have become a integral part of virtualisation, being able 
 almost instantly have transformed the way be build, develop and manage applications.
 
 In this blog I will show you how we can rapidly create Oracle 19c container clones using the Pure Storage Docker plugin
-and the new Oracle 19c container database image on the Oracle Container Registry
+with persistant volumes, and the new Oracle 19c container database image on the Oracle Container Registry
 
 https://container-registry.oracle.com/pls/apex/f?p=113:4:2886566670416# 
 
@@ -41,4 +41,33 @@ Password:
 Login Succeeded
 
 ```
+# Create the Persistent Volume using the Pure docker plugin
+```
+12:29:55 root@docker ~ → docker volume create --driver=pure:latest --opt size=5G --name=ora19c --label=orcl
+ora19c
+
+12:30:58 root@docker ~ → docker volume ls|grep ora19
+pure:latest         ora19c
+
+```
+# Confirm the volume has been created on the FlashArray
+```
+12:32:36 root@docker ~ → ssh pureuser@192.168.111.130
+pureuser@192.168.111.130's password:
+Last login: Sun Jan 24 16:29:52 2021 from 192.168.112.1
+
+Mon Feb 08 12:51:00 2021
+Welcome pureuser. This is Purity Version 6.0.4 on FlashArray Pure-SYD-m20-1
+**********************************************************************
+WARNING: The user pureuser is still configured with the default password.
+         Please change the password now: pureadmin setattr pureuser --password
+**********************************************************************
+
+pureuser@Pure-SYD-m20-1> purevol list *ora19c*
+Name                  Size  Source  Created                   Serial
+docker-docker-ora19c  5G    -       2021-02-08 12:48:50 AEDT  A21265762DB64ECE000E1FB0
+
+```
+
+
 
