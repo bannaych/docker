@@ -113,6 +113,8 @@ tmpfs                                           2922740        0   2922740   0% 
 tmpfs                                           2922740        0   2922740   0% /sys/firmware
 
 ```
+We can see that our persistent volume with the serial number ending in fb0 is mount on /opt/oracle/oradata, the same service number as the volume ora19c
+
 # Log into the Oracle Database
 ```
 [oracle@155481d8de4e ~]$ sqlplus / as sysdba
