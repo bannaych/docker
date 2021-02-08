@@ -28,7 +28,7 @@ docker plugin install purestorage/docker-plugin:v3.10 --alias pure --grant-all-p
 
 # Check the plugin version
 ```
-[11:46:57][root@docker ~]# docker plugin  ls
+12:26:36 root@docker ~ → docker plugin ls
 ID                  NAME                DESCRIPTION                      ENABLED
 a0b3cc51480d        pure:latest         Pure Storage plugin for Docker   true
 ```
@@ -39,5 +39,6 @@ a0b3cc51480d        pure:latest         Pure Storage plugin for Docker   true
 Username (cbannayan@purestorage.com):
 Password:
 Login Succeeded
+
 ```
 
