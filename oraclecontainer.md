@@ -144,4 +144,64 @@ NAME
 
 ```
 
+# Create a table in the database
+```
+SQL> create table table1 as select * from dba_users;
 
+Table created.
+
+SQL> select count(8) from table1;
+
+  COUNT(8)
+----------
+        36
+
+SQL>
+```
+
+Now that we have our first database container running, lets use this as our GOLD image to create clones from, Using the Docker
+and Pure Plugin we can create rapid clones of our containers in seconds. First lets create a clone of our database persistant volume ora19c
+
+# Create the clone volume 
+```
+12:57:09 root@docker ~ → docker volume create --driver=pure --name ora19clone -o source=orac19c
+ora19clone
+12:57:31 root@docker ~ →
+12:57:53 root@docker ~ → docker volume ls |grep ora19clone
+pure:latest         ora19clone
+
+```
+# Create the clone container using the clone volume
+```
+02:02:21 root@docker ~ → docker run -d --name zz-ora19c-clone --volume-driver pure -v ora19clone:/opt/oracle/oradata container-registry.oracle.com/database/enterprise:19.3.0.0
+344e25d5c357effdbe6b8ddf901f8e36d90faac5430e12cbaa41bfafeec0b075
+02:02:35 root@docker ~ →
+
+```
+# log into the container and confirm Oracle has started and cloned
+```
+02:03:20 root@docker ~ → docker ps
+CONTAINER ID        IMAGE                                                        COMMAND                  CREATED             STATUS                             PORTS               NAMES
+344e25d5c357        container-registry.oracle.com/database/enterprise:19.3.0.0   "/bin/sh -c 'exec $O…"   54 seconds ago      Up 48 seconds (health: starting)                       zz-ora19c-clone
+b86a816fe327        container-registry.oracle.com/database/enterprise:19.3.0.0   "/bin/sh -c 'exec $O…"   11 minutes ago      Up 11 minutes (healthy)                                zz-ora19c
+
+02:03:23 root@docker ~ → docker exec -it 344e25d5c357 bash
+[oracle@344e25d5c357 ~]$ df -k
+Filesystem                                    1K-blocks     Used Available Use% Mounted on
+overlay                                        68328860 56338860  11990000  83% /
+tmpfs                                             65536        0     65536   0% /dev
+tmpfs                                           2922740        0   2922740   0% /sys/fs/cgroup
+shm                                               65536        0     65536   0% /dev/shm
+/dev/mapper/ol-root                            68328860 56338860  11990000  83% /etc/hosts
+/dev/mapper/3624a9370a21265762db64ece000e2073   5232640  3895484   1337156  75% /opt/oracle/oradata
+tmpfs                                           2922740        0   2922740   0% /proc/acpi
+tmpfs                                           2922740        0   2922740   0% /proc/scsi
+tmpfs                                           2922740        0   2922740   0% /sys/firmware
+
+SQL> select count(*) from table1;
+
+  COUNT(*)
+----------
+        36
+
+SQL>
