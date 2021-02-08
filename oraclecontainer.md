@@ -69,5 +69,79 @@ docker-docker-ora19c  5G    -       2021-02-08 12:48:50 AEDT  A21265762DB64ECE00
 
 ```
 
+# Check to see if any containers are running
+```
+12:36:44 root@docker ~ → docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+```
+# Check the Docker Oracle Image
+```
+12:46:58 root@docker ~ → docker image ls
+REPOSITORY                                          TAG                     IMAGE ID            CREATED             SIZE
+container-registry.oracle.com/database/enterprise   19.3.0.0                6ee1b2e4403f        2 months ago        7.87GB
+
+```
+
+# Create the Oracle 19c Container
+```
+12:48:20 root@docker ~ → docker run -d --name zz-ora19c --mount source=ora19c,target=/opt/oracle/oradata container-registry.oracle.com/database/enterprise:19.3.0.0
+155481d8de4e37eb7033aead74267b7b5220c51f1415e1912b260d9d0d681ce4
+
+12:49:06 root@docker ~ → docker ps
+CONTAINER ID        IMAGE                                                        COMMAND                  CREATED             STATUS                             PORTS               NAMES
+155481d8de4e        container-registry.oracle.com/database/enterprise:19.3.0.0   "/bin/sh -c 'exec $O…"   27 seconds ago      Up 22 seconds (health: starting)                       zz-ora19c
+
+```
+# Log into the container and confirm the database is running on the Volume
+```
+12:49:25 root@docker ~ → docker exec -it 155481d8de4e bash
+[oracle@155481d8de4e ~]$
+[oracle@155481d8de4e ~]$ ps -ef|grep pmon
+oracle     506     1  0 01:49 ?        00:00:00 ora_pmon_ORCLCDB
+oracle     647   601  0 01:51 pts/0    00:00:00 grep --color=auto pmon
+[oracle@155481d8de4e ~]$
+[oracle@155481d8de4e ~]$ df -k
+Filesystem                                    1K-blocks     Used Available Use% Mounted on
+overlay                                        68328860 56622648  11706212  83% /
+tmpfs                                             65536        0     65536   0% /dev
+tmpfs                                           2922740        0   2922740   0% /sys/fs/cgroup
+shm                                               65536        0     65536   0% /dev/shm
+/dev/mapper/ol-root                            68328860 56622648  11706212  83% /etc/hosts
+/dev/mapper/3624a9370a21265762db64ece000e1fb0   5232640   266060   4966580   6% /opt/oracle/oradata
+tmpfs                                           2922740        0   2922740   0% /proc/acpi
+tmpfs                                           2922740        0   2922740   0% /proc/scsi
+tmpfs                                           2922740        0   2922740   0% /sys/firmware
+
+```
+# Log into the Oracle Database
+```
+[oracle@155481d8de4e ~]$ sqlplus / as sysdba
+
+SQL*Plus: Release 19.0.0.0.0 - Production on Mon Feb 8 01:52:19 2021
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> select name from v$database;
+
+NAME
+---------
+ORCLCDB
+
+SQL> select name from v$datafile;
+
+NAME
+--------------------------------------------------------------------------------
+/opt/oracle/oradata/ORCLCDB/system01.dbf
+/opt/oracle/oradata/ORCLCDB/sysaux01.dbf
+/opt/oracle/oradata/ORCLCDB/undotbs01.dbf
+/opt/oracle/oradata/ORCLCDB/users01.dbf
+
+```
 
 
