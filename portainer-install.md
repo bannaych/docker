@@ -27,3 +27,6 @@ docker ps
 CONTAINER ID        IMAGE                                                        COMMAND                  CREATED             STATUS                 PORTS                                            NAMES
 b9da841acf8b        portainer/portainer-ce                                       "/portainer"             2 hours ago         Up 2 hours             0.0.0.0:8000->8000/tcp, 0.0.0.0:9000->9000/tcp   portainer
 ```
+
+* Now we connect to Portainer using the Port 9000 and the IP address of the host http://192.168.111.198:9000
+
