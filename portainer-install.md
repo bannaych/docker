@@ -1,5 +1,5 @@
 
-* Install Portainer
+# Install Portainer
 
 Portainer runs as container, so installing it is just like installing any other container on Docker.
 
